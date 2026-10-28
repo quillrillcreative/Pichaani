@@ -9,3 +9,14 @@
 #authForm .text-button{margin-top:15px}
 #authForm input[hidden],#authForm label[hidden]{display:none}
 button:disabled{opacity:.6;cursor:wait}
+.photo-card>img.img-broken{opacity:0}
+.photo-dialog{width:min(920px,calc(100vw - 24px));background:#fff}
+.viewer{position:relative;display:grid}
+.viewer>img{display:block;width:100%;max-height:72vh;object-fit:contain;background:#10251f}
+.viewer-close{z-index:2;top:10px;right:14px;color:#fff;text-shadow:0 1px 8px #0008}
+.viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;flex-wrap:wrap}
+.viewer-info{display:grid;gap:4px;min-width:0}
+.viewer-info strong{font-size:12px;color:var(--green);overflow-wrap:anywhere}
+.viewer-info small{font-size:10px;color:#939b94}
+.viewer-actions{display:flex;gap:8px;flex-wrap:wrap}
+.secondary-button.danger{color:#b4412f;border-color:#f0d5cf}
