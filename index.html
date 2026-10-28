@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#183D35">
+  <title>Pichani — Your memories. Always within reach.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="Pichani home">
+        <span class="brand-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="7" width="34" height="34" rx="10" fill="#FAF7F0"/><circle cx="31" cy="17" r="4.5" fill="#E98270"/><path d="M11 31 21 20l7 7 4-4 8 10v2H11Z" fill="#6FA98A"/><path d="m26 31 6-7 8 9v2H26Z" fill="#183D35"/></svg></span>
+        <span>Pichani</span>
+      </a>
+      <button class="mobile-close" id="closeSidebar" aria-label="Close menu">×</button>
+      <div class="nav-label">LIBRARY</div>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-view="home"><span>⌂</span> Home</button>
+        <button class="nav-item" data-view="photos"><span>▧</span> All photos <span class="nav-count" id="photoCount">8</span></button>
+        <button class="nav-item" data-view="albums"><span>▤</span> Albums</button>
+        <button class="nav-item" data-view="shared"><span>♧</span> Shared with me</button>
+        <button class="nav-item" data-view="favourites"><span>♡</span> Favourites</button>
+      </nav>
+      <div class="sidebar-spacer"></div>
+      <div class="storage-card">
+        <div class="storage-top"><span class="storage-icon">▣</span><span>Storage</span><span class="storage-percent" id="storagePercent">0%</span></div>
+        <div class="progress"><span id="storageBar" style="width:0%"></span></div>
+        <p><strong id="storageSide">0 MB</strong> of 5 GB used</p>
+        <button class="upgrade-button" id="upgradeBtn">Explore plans <span>↗</span></button>
+      </div>
+      <button class="nav-item bottom-nav" data-view="settings"><span>⚙</span> Settings</button>
+      <div class="profile">
+        <div class="avatar" id="profileAvatar">?</div>
+        <div class="profile-info"><strong id="profileName">Not signed in</strong><small id="profilePlan">Free plan</small></div>
+        <button class="more-button" id="authButton" aria-label="Sign in or account">Sign in</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="menu-button" id="menuButton" aria-label="Open menu">☰</button>
+        <div class="breadcrumb"><span>My space</span><span class="crumb-divider">/</span><strong id="crumbTitle">Home</strong></div>
+        <div class="top-actions">
+          <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search your memories..." aria-label="Search photos"></label>
+          <button class="icon-button" aria-label="Notifications">♧<i></i></button>
+          <button class="avatar small-avatar" id="topAuthButton" aria-label="Sign in or account">?</button>
+        </div>
+      </header>
+
+      <section class="view active-view" id="homeView">
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow">YOUR PERSONAL PHOTO SPACE</p>
+            <h1>Your memories,<br><em>all in one place.</em></h1>
+            <p class="subheading">A home for the moments you want to keep close.</p>
+          </div>
+          <button class="primary-button" id="uploadButton"><span>↑</span> Upload photos</button>
+          <input id="fileInput" type="file" accept="image/*" multiple hidden>
+        </div>
+
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1600&q=85" alt="Mountain lake at sunset">
+          <div class="hero-overlay"></div>
+          <div class="hero-copy">
+            <span class="pill"><span class="dot"></span> YOUR SPACE, YOUR STORY</span>
+            <h2>Every picture<br>holds a little piece<br>of your life.</h2>
+            <p>Keep them organised, easy to find, and ready whenever you need them.</p>
+            <button class="hero-link" data-go="photos">Explore your photos <span>→</span></button>
+          </div>
+          <div class="hero-note"><span>✳</span> The little things<br>are the big things.</div>
+        </div>
+
+        <div class="section-heading">
+          <div><h2>Your collection</h2><p>A quick look at your photo space.</p></div>
+          <button class="text-button" data-go="photos">View all photos <span>→</span></button>
+        </div>
+        <div class="stats-grid">
+          <article class="stat-card"><div class="stat-icon coral-icon">▧</div><div><p>Photos saved</p><strong id="savedCount">0</strong><small>Across your library</small></div></article>
+          <article class="stat-card"><div class="stat-icon sage-icon">▤</div><div><p>Albums</p><strong id="albumCount">0</strong><small>Memories in collections</small></div></article>
+          <article class="stat-card"><div class="stat-icon cream-icon">◷</div><div><p>Storage used</p><strong id="storageUsed">0 MB</strong><small id="storageCaption">of 5 GB or 1,500 photos</small></div></article>
+        </div>
+
+        <div class="section-heading photos-heading">
+          <div><h2>Recently added</h2><p>Little moments from your latest uploads.</p></div>
+          <button class="text-button" data-go="photos">See all <span>→</span></button>
+        </div>
+        <div class="photo-grid" id="photoGrid">
+          <button class="photo-card" data-title="A quiet escape"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=80" alt="Sunlight over a green landscape"><span class="photo-meta"><strong>A quiet escape</strong><small>Today · Travel</small></span><span class="heart">♡</span></button>
+          <button class="photo-card" data-title="Golden hour"><img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=700&q=80" alt="Golden sunlight over hills"><span class="photo-meta"><strong>Golden hour</strong><small>Yesterday · Nature</small></span><span class="heart">♡</span></button>
+          <button class="photo-card" data-title="A day to remember"><img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=700&q=80" alt="Family enjoying time outdoors"><span class="photo-meta"><strong>A day to remember</strong><small>Oct 22 · Family</small></span><span class="heart">♡</span></button>
+          <button class="photo-card" data-title="Somewhere new"><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=700&q=80" alt="Mountain lake and forest"><span class="photo-meta"><strong>Somewhere new</strong><small>Oct 20 · Travel</small></span><span class="heart">♡</span></button>
+        </div>
+      </section>
+
+      <section class="view" id="photosView">
+        <div class="page-title-row"><div><p class="eyebrow">YOUR LIBRARY</p><h1>All photos</h1><p class="subheading">Every moment, gathered together.</p></div><button class="primary-button" data-upload><span>↑</span> Upload photos</button></div>
+        <div class="filter-row"><button class="filter-chip selected">All photos</button><button class="filter-chip">Favourites</button><button class="filter-chip">Recently added</button><span class="result-label" id="resultLabel">Showing 8 sample photos</span></div>
+        <div class="photo-grid large-grid" id="allPhotosGrid"></div>
+      </section>
+
+      <section class="view" id="albumsView">
+        <div class="page-title-row"><div><p class="eyebrow">YOUR COLLECTIONS</p><h1>Albums</h1><p class="subheading">Give every chapter of your story its own place.</p></div><button class="primary-button" id="createAlbum"><span>＋</span> New album</button></div>
+        <div class="album-grid">
+          <button class="album-card"><img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?auto=format&fit=crop&w=800&q=80" alt="Family outdoors"><span class="album-details"><strong>Family moments</strong><small>246 photos · Updated today</small></span><span class="album-arrow">↗</span></button>
+          <button class="album-card"><img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80" alt="Mountain travel"><span class="album-details"><strong>Travel diaries</strong><small>206 photos · Updated Oct 22</small></span><span class="album-arrow">↗</span></button>
+          <button class="album-card"><img src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=800&q=80" alt="Sunrise in nature"><span class="album-details"><strong>Nature & quiet</strong><small>142 photos · Updated Oct 20</small></span><span class="album-arrow">↗</span></button>
+          <button class="album-card"><img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Wedding flowers"><span class="album-details"><strong>Celebrations</strong><small>98 photos · Updated Oct 18</small></span><span class="album-arrow">↗</span></button>
+        </div>
+      </section>
+
+      <section class="view" id="sharedView">
+        <div class="empty-state"><div class="empty-art">♡</div><p class="eyebrow">SHARED MEMORIES</p><h1>Good things are better shared.</h1><p>Albums shared with you will appear here. In the full product, you'll be able to control who can view or download your shared photos.</p><button class="secondary-button" data-go="albums">Explore albums</button></div>
+      </section>
+
+      <section class="view" id="favouritesView">
+        <div class="page-title-row"><div><p class="eyebrow">THE ONES YOU LOVE</p><h1>Favourites</h1><p class="subheading">Keep your most-loved moments close.</p></div></div>
+        <div class="empty-state compact-empty"><div class="empty-art">♡</div><h2>Your favourites start here</h2><p>Tap the heart on a photo to save it here.</p><button class="secondary-button" data-go="photos">Browse photos</button></div>
+      </section>
+
+      <section class="view" id="settingsView">
+        <div class="page-title-row"><div><p class="eyebrow">YOUR ACCOUNT</p><h1>Settings</h1><p class="subheading">Manage your account and your peace of mind.</p></div></div>
+        <div class="settings-panel"><div class="settings-avatar">K</div><div class="settings-main"><h3>Kevin M.</h3><p>kevin@example.com <span class="demo-tag">DEMO PROFILE</span></p></div><button class="secondary-button" id="editProfile">Edit profile</button></div>
+        <div class="settings-panel setting-line"><div class="setting-symbol">♧</div><div class="settings-main"><h3>Privacy & security</h3><p>Manage sign-in and privacy preferences.</p></div><span class="setting-chevron">→</span></div>
+        <div class="settings-panel setting-line"><div class="setting-symbol">▣</div><div class="settings-main"><h3>Storage and plan</h3><p>You're on the Free plan with up to 5 GB or 1,500 photos.</p></div><button class="text-button" id="settingsPlans">View plans →</button></div>
+        <div class="settings-panel setting-line"><div class="setting-symbol">⇩</div><div class="settings-main"><h3>Download your data</h3><p>In the full product, you will be able to export your photos and account data.</p></div><span class="setting-chevron">→</span></div>
+      </section>
+
+      <footer class="footer"><span>© 2026 Pichani</span><span>Made for the moments that matter.</span><span><a href="#">Privacy</a> · <a href="#">Help</a></span></footer>
+    </main>
+  </div>
+  <div class="overlay" id="overlay"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="albumDialog"><form method="dialog" class="dialog-form"><button class="dialog-close" aria-label="Close">×</button><p class="eyebrow">MAKE A COLLECTION</p><h2>Create an album</h2><p>Give a group of memories a name.</p><input id="albumName" placeholder="e.g. Weekend in Naivasha" maxlength="60" required><div class="dialog-actions"><button class="secondary-button" value="cancel">Cancel</button><button class="primary-button" id="saveAlbum" value="default">Create album</button></div></form></dialog>
+  <dialog id="plansDialog"><form method="dialog" class="dialog-form"><button class="dialog-close" aria-label="Close">×</button><p class="eyebrow">MORE ROOM FOR MEMORIES</p><h2>Find your space</h2><p>Paid plans and prices will be finalised after storage and operating costs are confirmed.</p><div class="plan-option"><strong>Free</strong><span>Up to 5 GB or 1,500 photos</span><b>Free</b></div><div class="plan-option"><strong>More space</strong><span>Additional storage plans</span><b>Coming soon</b></div><div class="dialog-actions"><button class="primary-button" value="close">Sounds good</button></div></form></dialog>
+  <dialog id="authDialog"><form class="dialog-form" id="authForm"><button type="button" class="dialog-close" id="authClose" aria-label="Close">×</button><p class="eyebrow">YOUR PERSONAL PHOTO SPACE</p><h2 id="authTitle">Welcome to Pichani</h2><p id="authDescription">Sign in to access your private photo library from anywhere.</p><label class="auth-label" for="authEmail">Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required><label class="auth-label" for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required><label class="auth-label" id="authNameLabel" for="authName" hidden>Your name</label><input id="authName" hidden maxlength="80" placeholder="Your name"><p id="authMessage" class="auth-message" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="secondary-button" id="authModeButton">Create account</button><button class="primary-button" id="authSubmit" type="submit">Sign in</button></div><button type="button" class="text-button" id="resetPasswordButton">Forgot password?</button></form></dialog>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
