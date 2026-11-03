@@ -36,4 +36,4 @@ This is a static HTML/CSS/JavaScript project. Serve the folder through a local H
 - `styles.css` — existing responsive Pichani design plus auth styles
 - `script.js` — Supabase auth, photo, album, and UI logic
 - `supabase-config.js` — frontend-safe project URL/key
-- `supabase-hardening.sql` — RLS/storage audit queries, bucket limits and delete policies (run the audit section first)
+- `supabase-hardening.sql` — read-only backend audit queries (RLS, policies, bucket, grants, triggers); re-run to confirm nothing has drifted
