@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#183D35">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com; connect-src 'self' https://mnhdrwkmnnslhtbypjxw.supabase.co wss://mnhdrwkmnnslhtbypjxw.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'">
   <title>Pichani — Your memories. Always within reach.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,43 +12,43 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <noscript><p style="padding:24px;font-family:sans-serif">Pichani needs JavaScript to run.</p></noscript>
   <div class="app-shell">
     <aside class="sidebar" id="sidebar">
-      <a class="brand" href="#" aria-label="Pichani home">
+      <a class="brand" href="#" aria-label="Pichani home" data-view="home">
         <span class="brand-mark"><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="7" y="7" width="34" height="34" rx="10" fill="#FAF7F0"/><circle cx="31" cy="17" r="4.5" fill="#E98270"/><path d="M11 31 21 20l7 7 4-4 8 10v2H11Z" fill="#6FA98A"/><path d="m26 31 6-7 8 9v2H26Z" fill="#183D35"/></svg></span>
         <span>Pichani</span>
       </a>
       <button class="mobile-close" id="closeSidebar" aria-label="Close menu">×</button>
       <div class="nav-label">LIBRARY</div>
       <nav class="nav-list" aria-label="Main navigation">
-        <button class="nav-item active" data-view="home"><span>⌂</span> Home</button>
-        <button class="nav-item" data-view="photos"><span>▧</span> All photos <span class="nav-count" id="photoCount">0</span></button>
-        <button class="nav-item" data-view="albums"><span>▤</span> Albums</button>
-        <button class="nav-item" data-view="shared"><span>♧</span> Shared with me</button>
-        <button class="nav-item" data-view="favourites"><span>♡</span> Favourites</button>
+        <button class="nav-item active" data-view="home"><span aria-hidden="true">⌂</span> Home</button>
+        <button class="nav-item" data-view="photos"><span aria-hidden="true">▧</span> All photos <span class="nav-count" id="photoCount">0</span></button>
+        <button class="nav-item" data-view="albums"><span aria-hidden="true">▤</span> Albums</button>
+        <button class="nav-item" data-view="shared"><span aria-hidden="true">♧</span> Shared with me</button>
+        <button class="nav-item" data-view="favourites"><span aria-hidden="true">♡</span> Favourites</button>
       </nav>
       <div class="sidebar-spacer"></div>
       <div class="storage-card">
-        <div class="storage-top"><span class="storage-icon">▣</span><span>Storage</span><span class="storage-percent" id="storagePercent">0%</span></div>
-        <div class="progress"><span id="storageBar" style="width:0%"></span></div>
+        <div class="storage-top"><span class="storage-icon" aria-hidden="true">▣</span><span>Storage</span><span class="storage-percent" id="storagePercent">0%</span></div>
+        <div class="progress" role="progressbar" aria-label="Storage used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="storageProgress"><span id="storageBar" style="width:0%"></span></div>
         <p><strong id="storageSide">0 MB</strong> of 5 GB used</p>
-        <button class="upgrade-button" id="upgradeBtn">Explore plans <span>↗</span></button>
+        <button class="upgrade-button" id="upgradeBtn">Explore plans <span aria-hidden="true">↗</span></button>
       </div>
-      <button class="nav-item bottom-nav" data-view="settings"><span>⚙</span> Settings</button>
+      <button class="nav-item bottom-nav" data-view="settings"><span aria-hidden="true">⚙</span> Settings</button>
       <div class="profile">
-        <div class="avatar" id="profileAvatar">?</div>
+        <div class="avatar" id="profileAvatar" aria-hidden="true">?</div>
         <div class="profile-info"><strong id="profileName">Not signed in</strong><small id="profilePlan">Free plan</small></div>
         <button class="more-button" id="authButton" aria-label="Sign in or account">Sign in</button>
       </div>
     </aside>
 
-    <main class="main">
+    <main class="main" id="main">
       <header class="topbar">
         <button class="menu-button" id="menuButton" aria-label="Open menu">☰</button>
         <div class="breadcrumb"><span>My space</span><span class="crumb-divider">/</span><strong id="crumbTitle">Home</strong></div>
         <div class="top-actions">
-          <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Search your memories..." aria-label="Search photos"></label>
-          <button class="icon-button" aria-label="Notifications">♧<i></i></button>
+          <label class="search-box"><span aria-hidden="true">⌕</span><input id="searchInput" type="search" placeholder="Search your memories..." aria-label="Search photos"></label>
           <button class="avatar small-avatar" id="topAuthButton" aria-label="Sign in or account">?</button>
         </div>
       </header>
@@ -59,8 +60,8 @@
             <h1>Your memories,<br><em>all in one place.</em></h1>
             <p class="subheading">A home for the moments you want to keep close.</p>
           </div>
-          <button class="primary-button" id="uploadButton"><span>↑</span> Upload photos</button>
-          <input id="fileInput" type="file" accept="image/*" multiple hidden>
+          <button class="primary-button" id="uploadButton"><span aria-hidden="true">↑</span> Upload photos</button>
+          <input id="fileInput" type="file" accept="image/*,.heic,.heif,.avif" multiple hidden>
         </div>
 
         <div class="hero-card">
@@ -70,66 +71,131 @@
             <span class="pill"><span class="dot"></span> YOUR SPACE, YOUR STORY</span>
             <h2>Every picture<br>holds a little piece<br>of your life.</h2>
             <p>Keep them organised, easy to find, and ready whenever you need them.</p>
-            <button class="hero-link" data-go="photos">Explore your photos <span>→</span></button>
+            <button class="hero-link" data-go="photos">Explore your photos <span aria-hidden="true">→</span></button>
           </div>
-          <div class="hero-note"><span>✳</span> The little things<br>are the big things.</div>
+          <div class="hero-note"><span aria-hidden="true">✳</span> The little things<br>are the big things.</div>
         </div>
 
         <div class="section-heading">
           <div><h2>Your collection</h2><p>A quick look at your photo space.</p></div>
-          <button class="text-button" data-go="photos">View all photos <span>→</span></button>
+          <button class="text-button" data-go="photos">View all photos <span aria-hidden="true">→</span></button>
         </div>
         <div class="stats-grid">
-          <article class="stat-card"><div class="stat-icon coral-icon">▧</div><div><p>Photos saved</p><strong id="savedCount">0</strong><small>Across your library</small></div></article>
-          <article class="stat-card"><div class="stat-icon sage-icon">▤</div><div><p>Albums</p><strong id="albumCount">0</strong><small>Memories in collections</small></div></article>
-          <article class="stat-card"><div class="stat-icon cream-icon">◷</div><div><p>Storage used</p><strong id="storageUsed">0 MB</strong><small id="storageCaption">of 5 GB or 1,500 photos</small></div></article>
+          <article class="stat-card"><div class="stat-icon coral-icon" aria-hidden="true">▧</div><div><p>Photos saved</p><strong id="savedCount">0</strong><small>Across your library</small></div></article>
+          <article class="stat-card"><div class="stat-icon sage-icon" aria-hidden="true">▤</div><div><p>Albums</p><strong id="albumCount">0</strong><small>Memories in collections</small></div></article>
+          <article class="stat-card"><div class="stat-icon cream-icon" aria-hidden="true">◷</div><div><p>Storage used</p><strong id="storageUsed">0 MB</strong><small id="storageCaption">of 5 GB or 1,500 photos</small></div></article>
         </div>
 
         <div class="section-heading photos-heading">
           <div><h2>Recently added</h2><p>Little moments from your latest uploads.</p></div>
-          <button class="text-button" data-go="photos">See all <span>→</span></button>
+          <button class="text-button" data-go="photos">See all <span aria-hidden="true">→</span></button>
         </div>
         <div class="photo-grid" id="photoGrid"></div>
       </section>
 
       <section class="view" id="photosView">
-        <div class="page-title-row"><div><p class="eyebrow">YOUR LIBRARY</p><h1>All photos</h1><p class="subheading">Every moment, gathered together.</p></div><button class="primary-button" data-upload><span>↑</span> Upload photos</button></div>
-        <div class="filter-row"><button class="filter-chip selected">All photos</button><button class="filter-chip">Favourites</button><button class="filter-chip">Recently added</button><span class="result-label" id="resultLabel">Sign in to see your saved photos</span></div>
+        <div class="page-title-row"><div><p class="eyebrow">YOUR LIBRARY</p><h1>All photos</h1><p class="subheading">Every moment, gathered together.</p></div><button class="primary-button" data-upload><span aria-hidden="true">↑</span> Upload photos</button></div>
+        <div class="filter-row">
+          <button class="filter-chip selected" data-filter="0">All photos</button>
+          <button class="filter-chip" data-filter="1">Favourites</button>
+          <button class="filter-chip" data-filter="2">Recently added</button>
+          <span class="result-label" id="resultLabel">Sign in to see your saved photos</span>
+        </div>
+        <div class="toolbar-row">
+          <label class="sort-label">Sort <select class="sort-select" aria-label="Sort photos">
+            <option value="newest">Newest added</option><option value="oldest">Oldest added</option><option value="taken">Date taken</option><option value="name">Name A–Z</option><option value="size">Largest first</option>
+          </select></label>
+          <button class="secondary-button select-toggle" type="button" data-action="toggle-select">Select</button>
+        </div>
         <div class="photo-grid large-grid" id="allPhotosGrid"></div>
       </section>
 
       <section class="view" id="albumsView">
-        <div class="page-title-row"><div><p class="eyebrow">YOUR COLLECTIONS</p><h1>Albums</h1><p class="subheading">Give every chapter of your story its own place.</p></div><button class="primary-button" id="createAlbum"><span>＋</span> New album</button></div>
-        <div class="album-grid"></div>
+        <div class="page-title-row"><div><p class="eyebrow">YOUR COLLECTIONS</p><h1>Albums</h1><p class="subheading">Give every chapter of your story its own place.</p></div><button class="primary-button" id="createAlbum"><span aria-hidden="true">＋</span> New album</button></div>
+        <div class="album-grid" id="albumGrid"></div>
+      </section>
+
+      <section class="view" id="albumView">
+        <div class="page-title-row album-head">
+          <div class="album-head-text"><p class="eyebrow">ALBUM</p><h1 id="albumTitle"></h1><p class="subheading" id="albumDesc"></p><p class="album-meta" id="albumMeta"></p></div>
+          <div class="title-actions">
+            <button class="secondary-button" type="button" data-view="albums">← Albums</button>
+            <button class="secondary-button" type="button" id="albumEdit">Edit</button>
+            <button class="secondary-button danger" type="button" id="albumDelete">Delete</button>
+            <button class="primary-button" type="button" data-upload><span aria-hidden="true">↑</span> Upload here</button>
+          </div>
+        </div>
+        <div class="toolbar-row">
+          <label class="sort-label">Sort <select class="sort-select" aria-label="Sort album photos">
+            <option value="newest">Newest added</option><option value="oldest">Oldest added</option><option value="taken">Date taken</option><option value="name">Name A–Z</option><option value="size">Largest first</option>
+          </select></label>
+          <button class="secondary-button select-toggle" type="button" data-action="toggle-select">Select</button>
+        </div>
+        <div class="photo-grid large-grid" id="albumPhotoGrid"></div>
       </section>
 
       <section class="view" id="sharedView">
-        <div class="empty-state"><div class="empty-art">♡</div><p class="eyebrow">SHARED MEMORIES</p><h1>Good things are better shared.</h1><p>Albums shared with you will appear here. In the full product, you'll be able to control who can view or download your shared photos.</p><button class="secondary-button" data-go="albums">Explore albums</button></div>
+        <div class="empty-state"><div class="empty-art" aria-hidden="true">♡</div><p class="eyebrow">SHARED MEMORIES</p><h1>Good things are better shared.</h1><p>Sharing is coming soon. Albums shared with you will appear here.</p><button class="secondary-button" data-go="albums">Explore albums</button></div>
       </section>
 
       <section class="view" id="favouritesView">
         <div class="page-title-row"><div><p class="eyebrow">THE ONES YOU LOVE</p><h1>Favourites</h1><p class="subheading">Keep your most-loved moments close.</p></div></div>
+        <div class="toolbar-row">
+          <label class="sort-label">Sort <select class="sort-select" aria-label="Sort favourites">
+            <option value="newest">Newest added</option><option value="oldest">Oldest added</option><option value="taken">Date taken</option><option value="name">Name A–Z</option><option value="size">Largest first</option>
+          </select></label>
+          <button class="secondary-button select-toggle" type="button" data-action="toggle-select">Select</button>
+        </div>
         <div class="photo-grid large-grid" id="favouritesGrid"></div>
-        <div class="empty-state compact-empty" id="favouritesEmpty"><div class="empty-art">♡</div><h2>Your favourites start here</h2><p>Tap the heart on a photo to save it here.</p><button class="secondary-button" data-go="photos">Browse photos</button></div>
+        <div class="empty-state compact-empty" id="favouritesEmpty"><div class="empty-art" aria-hidden="true">♡</div><h2>Your favourites start here</h2><p>Tap the heart on a photo to save it here.</p><button class="secondary-button" data-go="photos">Browse photos</button></div>
       </section>
 
       <section class="view" id="settingsView">
         <div class="page-title-row"><div><p class="eyebrow">YOUR ACCOUNT</p><h1>Settings</h1><p class="subheading">Manage your account and your peace of mind.</p></div></div>
-        <div class="settings-panel"><div class="settings-avatar">?</div><div class="settings-main"><h3>Not signed in</h3><p>Sign in to view your account</p></div><button class="secondary-button" id="editProfile">Edit profile</button></div>
-        <div class="settings-panel setting-line"><div class="setting-symbol">♧</div><div class="settings-main"><h3>Privacy & security</h3><p>Manage sign-in and privacy preferences.</p></div><span class="setting-chevron">→</span></div>
-        <div class="settings-panel setting-line"><div class="setting-symbol">▣</div><div class="settings-main"><h3>Storage and plan</h3><p>You're on the Free plan with up to 5 GB or 1,500 photos.</p></div><button class="text-button" id="settingsPlans">View plans →</button></div>
-        <div class="settings-panel setting-line"><div class="setting-symbol">⇩</div><div class="settings-main"><h3>Download your data</h3><p>In the full product, you will be able to export your photos and account data.</p></div><span class="setting-chevron">→</span></div>
+        <div class="settings-panel"><div class="settings-avatar" id="settingsAvatar" aria-hidden="true">?</div><div class="settings-main"><h3 id="settingsName">Not signed in</h3><p id="settingsEmail">Sign in to view your account</p></div><button class="secondary-button" id="editProfile">Edit profile</button></div>
+        <div class="settings-panel setting-line"><div class="setting-symbol" aria-hidden="true">♧</div><div class="settings-main"><h3>Privacy &amp; security</h3><p>Your photos are private and visible only to you. Change your password or sign out of this device.</p></div><div class="settings-actions"><button class="secondary-button" id="changePassword">Change password</button><button class="secondary-button" id="settingsSignOut">Sign out</button></div></div>
+        <div class="settings-panel setting-line"><div class="setting-symbol" aria-hidden="true">▣</div><div class="settings-main"><h3>Storage and plan</h3><p id="settingsStorage">You're on the Free plan with up to 5 GB or 1,500 photos.</p></div><button class="text-button" id="settingsPlans">View plans →</button></div>
+        <div class="settings-panel setting-line"><div class="setting-symbol" aria-hidden="true">⇩</div><div class="settings-main"><h3>Download your data</h3><p>Export a list of your albums and photos (names, dates, sizes) as a JSON file. To download the pictures themselves, use Select on All photos.</p></div><button class="secondary-button" id="exportData">Export</button></div>
       </section>
 
       <footer class="footer"><span>© 2026 Pichani</span><span>Made for the moments that matter.</span><span><a href="#">Privacy</a> · <a href="#">Help</a></span></footer>
     </main>
   </div>
   <div class="overlay" id="overlay"></div>
+
+  <div class="selection-bar" id="selectionBar" role="toolbar" aria-label="Selected photos" hidden>
+    <span class="sel-count" id="selCount">0 selected</span>
+    <button type="button" class="secondary-button" data-action="select-all">Select all</button>
+    <button type="button" class="secondary-button" data-action="bulk-fav">♡ Favourite</button>
+    <button type="button" class="secondary-button" data-action="bulk-move">Move</button>
+    <button type="button" class="secondary-button" data-action="bulk-download">Download</button>
+    <button type="button" class="secondary-button danger" data-action="bulk-delete">Delete</button>
+    <button type="button" class="text-button" data-action="toggle-select">Cancel</button>
+  </div>
+
+  <div class="upload-panel" id="uploadPanel" role="region" aria-label="Uploads" hidden>
+    <div class="upload-head"><strong id="uploadTitle">Uploading…</strong><button type="button" class="text-button" data-action="dismiss-uploads" id="uploadDismiss" hidden>Close</button></div>
+    <div class="progress" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="uploadProgress"><span id="uploadBar" style="width:0%"></span></div>
+    <ul class="upload-list" id="uploadList"></ul>
+    <button type="button" class="secondary-button" data-action="retry-failed" id="uploadRetry" hidden>Retry failed</button>
+  </div>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <dialog id="albumDialog"><form method="dialog" class="dialog-form"><button class="dialog-close" aria-label="Close">×</button><p class="eyebrow">MAKE A COLLECTION</p><h2>Create an album</h2><p>Give a group of memories a name.</p><input id="albumName" placeholder="e.g. Weekend in Naivasha" maxlength="60" required><div class="dialog-actions"><button class="secondary-button" value="cancel">Cancel</button><button class="primary-button" id="saveAlbum" value="default">Create album</button></div></form></dialog>
+
+  <dialog id="albumDialog"><form class="dialog-form" id="albumForm"><button type="button" class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow" id="albumDialogEyebrow">MAKE A COLLECTION</p><h2 id="albumDialogTitle">Create an album</h2><p>Give a group of memories a name.</p><label class="auth-label" for="albumName">Album name</label><input id="albumName" placeholder="e.g. Weekend in Naivasha" maxlength="60" required><label class="auth-label" for="albumDescription">Description (optional)</label><textarea id="albumDescription" maxlength="300" rows="3" placeholder="What is this album about?"></textarea><p class="auth-message" id="albumMessage" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="secondary-button" data-close>Cancel</button><button class="primary-button" id="saveAlbum" type="submit">Create album</button></div></form></dialog>
+
   <dialog id="plansDialog"><form method="dialog" class="dialog-form"><button class="dialog-close" aria-label="Close">×</button><p class="eyebrow">MORE ROOM FOR MEMORIES</p><h2>Find your space</h2><p>Paid plans and prices will be finalised after storage and operating costs are confirmed.</p><div class="plan-option"><strong>Free</strong><span>Up to 5 GB or 1,500 photos</span><b>Free</b></div><div class="plan-option"><strong>More space</strong><span>Additional storage plans</span><b>Coming soon</b></div><div class="dialog-actions"><button class="primary-button" value="close">Sounds good</button></div></form></dialog>
-  <dialog id="authDialog"><form class="dialog-form" id="authForm"><button type="button" class="dialog-close" id="authClose" aria-label="Close">×</button><p class="eyebrow">YOUR PERSONAL PHOTO SPACE</p><h2 id="authTitle">Welcome to Pichani</h2><p id="authDescription">Sign in to access your private photo library from anywhere.</p><label class="auth-label" for="authEmail">Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required><label class="auth-label" for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required><label class="auth-label" id="authNameLabel" for="authName" hidden>Your name</label><input id="authName" hidden maxlength="80" placeholder="Your name"><p id="authMessage" class="auth-message" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="secondary-button" id="authModeButton">Create account</button><button class="primary-button" id="authSubmit" type="submit">Sign in</button></div><button type="button" class="text-button" id="resetPasswordButton">Forgot password?</button></form></dialog>
-  <dialog id="photoDialog" class="photo-dialog"><div class="viewer"><button type="button" class="dialog-close viewer-close" id="viewerClose" aria-label="Close">×</button><img id="viewerImg" alt=""><div class="viewer-bar"><div class="viewer-info"><strong id="viewerTitle"></strong><small id="viewerMeta"></small></div><div class="viewer-actions"><button type="button" class="secondary-button" id="viewerFav">♡ Favourite</button><button type="button" class="secondary-button" id="viewerDownload">Download</button><button type="button" class="secondary-button danger" id="viewerDelete">Delete</button></div></div></div></dialog>
+
+  <dialog id="authDialog"><form class="dialog-form" id="authForm"><button type="button" class="dialog-close" id="authClose" aria-label="Close">×</button><p class="eyebrow">YOUR PERSONAL PHOTO SPACE</p><h2 id="authTitle">Welcome to Pichani</h2><p id="authDescription">Sign in to access your private photo library from anywhere.</p><label class="auth-label" for="authEmail">Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required><label class="auth-label" for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required><label class="auth-label" id="authNameLabel" for="authName" hidden>Your name</label><input id="authName" hidden maxlength="80" placeholder="Your name" autocomplete="name"><p id="authMessage" class="auth-message" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="secondary-button" id="authModeButton">Create account</button><button class="primary-button" id="authSubmit" type="submit">Sign in</button></div><button type="button" class="text-button" id="resetPasswordButton">Forgot password?</button></form></dialog>
+
+  <dialog id="profileDialog"><form class="dialog-form" id="profileForm"><button type="button" class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow">YOUR ACCOUNT</p><h2>Edit profile</h2><p>This name is shown in your sidebar and settings.</p><label class="auth-label" for="profileNameInput">Your name</label><input id="profileNameInput" maxlength="80" placeholder="Your name" autocomplete="name" required><p class="auth-message" id="profileMessage" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="secondary-button" data-close>Cancel</button><button class="primary-button" id="profileSave" type="submit">Save</button></div></form></dialog>
+
+  <dialog id="moveDialog"><form class="dialog-form" id="moveForm"><button type="button" class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow">ORGANISE</p><h2 id="moveTitle">Move to album</h2><label class="auth-label" for="moveTarget">Album</label><select id="moveTarget"></select><div id="moveNewWrap" hidden><label class="auth-label" for="moveNewName">New album name</label><input id="moveNewName" maxlength="60" placeholder="e.g. Weekend in Naivasha"></div><p class="auth-message" id="moveMessage" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="secondary-button" data-close>Cancel</button><button class="primary-button" id="moveSave" type="submit">Move</button></div></form></dialog>
+
+  <dialog id="confirmDialog"><form method="dialog" class="dialog-form" id="confirmForm"><p class="eyebrow" id="confirmEyebrow">PLEASE CONFIRM</p><h2 id="confirmTitle">Are you sure?</h2><p id="confirmMessage"></p><label class="check-row" id="confirmCheckRow" hidden><input type="checkbox" id="confirmCheck"><span id="confirmCheckLabel"></span></label><div class="dialog-actions"><button class="secondary-button" value="cancel" id="confirmCancel">Cancel</button><button class="primary-button" value="ok" id="confirmOk">Confirm</button></div></form></dialog>
+
+  <dialog id="photoDialog" class="photo-dialog" aria-label="Photo viewer"><div class="viewer"><button type="button" class="dialog-close viewer-close" id="viewerClose" aria-label="Close viewer">×</button><div class="viewer-stage"><button type="button" class="viewer-nav prev" id="viewerPrev" aria-label="Previous photo">‹</button><img id="viewerImg" alt=""><button type="button" class="viewer-nav next" id="viewerNext" aria-label="Next photo">›</button></div><div class="viewer-bar"><div class="viewer-info"><strong id="viewerTitle"></strong><small id="viewerMeta"></small></div><div class="viewer-actions"><button type="button" class="secondary-button" id="viewerFav">♡ Favourite</button><button type="button" class="secondary-button" id="viewerMove">Move</button><button type="button" class="secondary-button" id="viewerDownload">Download</button><button type="button" class="secondary-button danger" id="viewerDelete">Delete</button></div></div></div></dialog>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/dist/umd/supabase.js" integrity="sha384-TcHRA3zBbn+Lexh5n+Oil4guNPOS3rjNDpGRAN46u/s/mB2IZ50ceC6TYDU2yvgK" crossorigin="anonymous"></script>
   <script src="supabase-config.js"></script>
   <script src="script.js"></script>
