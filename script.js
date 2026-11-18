@@ -281,15 +281,28 @@ async function signUrls(paths) {
     }
   }
 }
+/* Shows a labelled placeholder where a photo can't be previewed (e.g. HEIC outside Safari). */
+function markBroken(img) {
+  img.classList.add("img-broken");
+  const card = img.closest(".photo-card");
+  if (!card || card.querySelector(".img-fallback")) return;
+  const name = card.querySelector(".photo-meta strong")?.textContent || "";
+  const ext = name.includes(".") ? name.split(".").pop().toUpperCase() : "";
+  const ph = document.createElement("span");
+  ph.className = "img-fallback";
+  ph.textContent = ext ? `${ext} preview not available in this browser` : "Preview not available";
+  ph.style.height = img.offsetHeight + "px";
+  img.insertAdjacentElement("afterend", ph);
+}
 /* A signed URL that expired while the page was open: re-sign once and retry. */
 document.addEventListener("error", async e => {
   const img = e.target;
   if (!(img instanceof HTMLImageElement) || !img.dataset.path) return;
-  if (img.dataset.retried) { img.classList.add("img-broken"); return; }
+  if (img.dataset.retried) { markBroken(img); return; }
   img.dataset.retried = "1";
   signedUrlCache.delete(img.dataset.path);
   try { await signUrls([img.dataset.path]); const u = cachedUrl(img.dataset.path); if (u) { img.src = u; return; } } catch (_) { /* fall through */ }
-  img.classList.add("img-broken");
+  markBroken(img);
 }, true);
 
 /* ----------------------------------------------------------- data loading */
@@ -929,6 +942,7 @@ async function openViewer(id) {
   state.viewerId = id;
   const img = $("#viewerImg");
   img.dataset.path = row.object_path; delete img.dataset.retried; img.classList.remove("img-broken");
+  img.parentElement?.querySelector(".img-fallback")?.remove();
   img.src = url;
   img.alt = row.original_filename || "Photo";
   syncViewer();
