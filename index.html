@@ -112,6 +112,10 @@
 
       <section class="view" id="albumsView">
         <div class="page-title-row"><div><p class="eyebrow">YOUR COLLECTIONS</p><h1>Albums</h1><p class="subheading">Give every chapter of your story its own place.</p></div><button class="primary-button" id="createAlbum"><span aria-hidden="true">＋</span> New album</button></div>
+        <div class="toolbar-row album-toolbar">
+          <label class="sort-label">Sort <select class="sort-select album-sort" aria-label="Sort albums"><option value="updated">Recently updated</option><option value="name">Name A–Z</option><option value="count">Most photos</option></select></label>
+          <p class="result-label" id="albumSummary" aria-live="polite"></p>
+        </div>
         <div class="album-grid" id="albumGrid"></div>
       </section>
 
@@ -135,7 +139,7 @@
       </section>
 
       <section class="view" id="sharedView">
-        <div class="empty-state"><div class="empty-art" aria-hidden="true">♡</div><p class="eyebrow">SHARED MEMORIES</p><h1>Good things are better shared.</h1><p>Sharing is coming soon. Albums shared with you will appear here.</p><button class="secondary-button" data-go="albums">Explore albums</button></div>
+        <div class="empty-state"><div class="empty-art" aria-hidden="true">♡</div><p class="eyebrow">SHARED MEMORIES</p><h1>Nothing shared with you yet</h1><p>Sharing isn’t switched on yet. Until it is, every album and photo stays private to your account. Once sharing is available, albums that others share with you will appear here.</p><button class="secondary-button" data-go="albums">Go to my albums</button></div>
       </section>
 
       <section class="view" id="favouritesView">
@@ -152,9 +156,9 @@
 
       <section class="view" id="settingsView">
         <div class="page-title-row"><div><p class="eyebrow">YOUR ACCOUNT</p><h1>Settings</h1><p class="subheading">Manage your account and your peace of mind.</p></div></div>
-        <div class="settings-panel"><div class="settings-avatar" id="settingsAvatar" aria-hidden="true">?</div><div class="settings-main"><h3 id="settingsName">Not signed in</h3><p id="settingsEmail">Sign in to view your account</p></div><button class="secondary-button" id="editProfile">Edit profile</button></div>
+        <div class="settings-panel"><div class="settings-avatar" id="settingsAvatar" aria-hidden="true">?</div><div class="settings-main"><h3 id="settingsName">Not signed in</h3><p id="settingsEmail">Sign in to view your account</p><p class="settings-since" id="settingsSince" hidden></p></div><button class="secondary-button" id="editProfile">Edit profile</button></div>
         <div class="settings-panel setting-line"><div class="setting-symbol" aria-hidden="true">♧</div><div class="settings-main"><h3>Privacy &amp; security</h3><p>Your photos are private and visible only to you. Change your password or sign out of this device.</p></div><div class="settings-actions"><button class="secondary-button" id="changePassword">Change password</button><button class="secondary-button" id="settingsSignOut">Sign out</button></div></div>
-        <div class="settings-panel setting-line"><div class="setting-symbol" aria-hidden="true">▣</div><div class="settings-main"><h3>Storage and plan</h3><p id="settingsStorage">You're on the Free plan with up to 5 GB or 1,500 photos.</p></div><button class="text-button" id="settingsPlans">View plans →</button></div>
+        <div class="settings-panel setting-line"><div class="setting-symbol" aria-hidden="true">▣</div><div class="settings-main"><h3>Storage and plan</h3><p id="settingsStorage">You're on the Free plan with up to 5 GB or 1,500 photos.</p><div class="progress settings-progress" role="progressbar" aria-label="Storage used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="settingsBar" style="width:0%"></span></div></div><button class="text-button" id="settingsPlans">View plans →</button></div>
         <div class="settings-panel setting-line"><div class="setting-symbol" aria-hidden="true">⇩</div><div class="settings-main"><h3>Download your data</h3><p>Export a list of your albums and photos (names, dates, sizes) as a JSON file. To download the pictures themselves, use Select on All photos.</p></div><button class="secondary-button" id="exportData">Export</button></div>
       </section>
 
@@ -184,7 +188,16 @@
 
   <dialog id="albumDialog"><form class="dialog-form" id="albumForm"><button type="button" class="dialog-close" data-close aria-label="Close">×</button><p class="eyebrow" id="albumDialogEyebrow">MAKE A COLLECTION</p><h2 id="albumDialogTitle">Create an album</h2><p>Give a group of memories a name.</p><label class="auth-label" for="albumName">Album name</label><input id="albumName" placeholder="e.g. Weekend in Naivasha" maxlength="60" required><label class="auth-label" for="albumDescription">Description (optional)</label><textarea id="albumDescription" maxlength="300" rows="3" placeholder="What is this album about?"></textarea><p class="auth-message" id="albumMessage" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="secondary-button" data-close>Cancel</button><button class="primary-button" id="saveAlbum" type="submit">Create album</button></div></form></dialog>
 
-  <dialog id="plansDialog"><form method="dialog" class="dialog-form"><button class="dialog-close" aria-label="Close">×</button><p class="eyebrow">MORE ROOM FOR MEMORIES</p><h2>Find your space</h2><p>Paid plans and prices will be finalised after storage and operating costs are confirmed.</p><div class="plan-option"><strong>Free</strong><span>Up to 5 GB or 1,500 photos</span><b>Free</b></div><div class="plan-option"><strong>More space</strong><span>Additional storage plans</span><b>Coming soon</b></div><div class="dialog-actions"><button class="primary-button" value="close">Sounds good</button></div></form></dialog>
+  <dialog id="plansDialog"><form method="dialog" class="dialog-form plans-form"><button class="dialog-close" aria-label="Close">×</button><p class="eyebrow">MORE ROOM FOR MEMORIES</p><h2>Your plan</h2><p>You’re on the Free plan. Paid plans aren’t priced yet, so nothing is charged.</p>
+<div class="plan-usage">
+  <div class="plan-usage-row"><span>Storage</span><strong id="planStorageText">0 MB of 5 GB</strong></div>
+  <div class="progress" role="progressbar" aria-label="Storage used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="planStorageBar" style="width:0%"></span></div>
+  <div class="plan-usage-row"><span>Photos</span><strong id="planPhotosText">0 of 1,500</strong></div>
+  <div class="progress" role="progressbar" aria-label="Photos used" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="planPhotosBar" style="width:0%"></span></div>
+</div>
+<div class="plan-option plan-current"><div><strong>Free</strong><span>Your current plan</span><ul class="plan-list"><li>5 GB of storage</li><li>1,500 photos</li><li>Albums, favourites and bulk download</li><li>Private to you</li></ul></div><b>Current</b></div>
+<div class="plan-option"><div><strong>More space</strong><span>Extra storage for bigger libraries</span><ul class="plan-list"><li>Pricing isn’t set yet</li></ul></div><b>Coming soon</b></div>
+<div class="dialog-actions"><button class="primary-button" value="close">Sounds good</button></div></form></dialog>
 
   <dialog id="authDialog"><form class="dialog-form" id="authForm"><button type="button" class="dialog-close" id="authClose" aria-label="Close">×</button><p class="eyebrow">YOUR PERSONAL PHOTO SPACE</p><h2 id="authTitle">Welcome to Pichani</h2><p id="authDescription">Sign in to access your private photo library from anywhere.</p><label class="auth-label" for="authEmail">Email address</label><input id="authEmail" type="email" autocomplete="email" placeholder="you@example.com" required><label class="auth-label" for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required><label class="auth-label" id="authNameLabel" for="authName" hidden>Your name</label><input id="authName" hidden maxlength="80" placeholder="Your name" autocomplete="name"><p id="authMessage" class="auth-message" aria-live="polite"></p><div class="dialog-actions"><button type="button" class="secondary-button" id="authModeButton">Create account</button><button class="primary-button" id="authSubmit" type="submit">Sign in</button></div><button type="button" class="text-button" id="resetPasswordButton">Forgot password?</button></form></dialog>
 

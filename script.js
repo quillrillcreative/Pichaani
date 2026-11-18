@@ -30,7 +30,7 @@ let loadToken = 0;
 const signedUrlCache = new Map();
 const state = {
   user: null, profile: null, photos: [], albums: [], loading: false,
-  view: "home", albumId: null, filter: 0, sort: "newest", query: "",
+  view: "home", albumId: null, filter: 0, sort: "newest", albumSort: "updated", query: "",
   selecting: false, selected: new Set(),
   limits: { photos: PAGE_SIZE, favs: PAGE_SIZE, album: PAGE_SIZE },
   list: [], viewerId: null, signingOut: false,
@@ -442,7 +442,8 @@ async function renderAlbumList() {
   const covers = new Map(state.albums.map(a => [a.id, coverRow(a.id)]));
   try { await signUrls([...covers.values()].filter(Boolean).map(r => r.object_path)); } catch (err) { console.warn("Could not sign album covers", err); }
   if (token !== grid._paint) return;
-  grid.innerHTML = state.albums.map(a => {
+  const albums = sortedAlbums();
+  grid.innerHTML = albums.map(a => {
     const count = state.photos.filter(p => p.album_id === a.id).length;
     const cover = covers.get(a.id);
     const url = cover && cachedUrl(cover.object_path);
@@ -450,6 +451,15 @@ async function renderAlbumList() {
     return `<button type="button" class="album-card" data-album-id="${escapeHtml(a.id)}"><span class="album-cover">${art}</span>`
       + `<span class="album-details"><strong>${escapeHtml(a.name)}</strong><small>${plural(count, "photo")} · Updated ${escapeHtml(formatDate(a.updated_at || a.created_at))}</small></span><span class="album-arrow" aria-hidden="true">↗</span></button>`;
   }).join("");
+  const inAlbums = state.photos.filter(p => p.album_id).length;
+  $("#albumSummary").textContent = `${plural(albums.length, "album")} · ${plural(inAlbums, "photo")} in albums`;
+}
+function sortedAlbums() {
+  const count = id => state.photos.filter(p => p.album_id === id).length;
+  const rows = [...state.albums];
+  if (state.albumSort === "name") return rows.sort((a, b) => a.name.localeCompare(b.name));
+  if (state.albumSort === "count") return rows.sort((a, b) => count(b.id) - count(a.id) || a.name.localeCompare(b.name));
+  return rows.sort((a, b) => new Date(b.updated_at || b.created_at) - new Date(a.updated_at || a.created_at));
 }
 function renderAlbumDetail() {
   const album = albumById(state.albumId);
@@ -473,7 +483,25 @@ function renderSettings() {
   $("#settingsStorage").textContent = state.user
     ? `${planLabel()} · ${humanBytes(bytes)} of 5 GB used · ${count.toLocaleString()} of ${FREE_PHOTO_LIMIT.toLocaleString()} photos`
     : "You're on the Free plan with up to 5 GB or 1,500 photos.";
+  const pct = Math.min(100, Math.round(bytes / FREE_BYTES_LIMIT * 100));
+  $("#settingsBar").style.width = pct + "%";
+  $("#settingsBar").parentElement.setAttribute("aria-valuenow", String(pct));
+  const since = $("#settingsSince");
+  since.hidden = !state.user?.created_at;
+  since.textContent = state.user?.created_at ? `Member since ${formatDate(state.user.created_at)}` : "";
 }
+function fillPlanUsage() {
+  const { count, bytes } = usageNumbers();
+  const pb = Math.min(100, Math.round(bytes / FREE_BYTES_LIMIT * 100));
+  const pp = Math.min(100, Math.round(count / FREE_PHOTO_LIMIT * 100));
+  $("#planStorageText").textContent = `${humanBytes(bytes)} of 5 GB`;
+  $("#planStorageBar").style.width = pb + "%";
+  $("#planPhotosText").textContent = `${count.toLocaleString()} of ${FREE_PHOTO_LIMIT.toLocaleString()}`;
+  $("#planPhotosBar").style.width = pp + "%";
+  $("#planStorageBar").parentElement.setAttribute("aria-valuenow", String(pb));
+  $("#planPhotosBar").parentElement.setAttribute("aria-valuenow", String(pp));
+}
+function openPlans() { fillPlanUsage(); $("#plansDialog").showModal(); }
 function usageNumbers() {
   const bytes = state.photos.reduce((s, p) => s + (Number(p.size_bytes) || 0), 0);
   return { count: state.photos.length, bytes };
@@ -494,11 +522,12 @@ function updateStats() {
 }
 
 /* ----------------------------------------------------------- sort + search */
-$$(".sort-select").forEach(sel => sel.addEventListener("change", () => {
+$$(".sort-select:not(.album-sort)").forEach(sel => sel.addEventListener("change", () => {
   state.sort = sel.value;
-  $$(".sort-select").forEach(s => { s.value = state.sort; });
+  $$(".sort-select:not(.album-sort)").forEach(s => { s.value = state.sort; });
   render();
 }));
+$(".album-sort").addEventListener("change", e => { state.albumSort = e.target.value; renderAlbumList(); });
 $$(".filter-chip").forEach(chip => chip.addEventListener("click", () => { state.filter = Number(chip.dataset.filter) || 0; state.limits.photos = PAGE_SIZE; render(); }));
 let searchTimer;
 $("#searchInput").addEventListener("input", e => {
@@ -953,8 +982,8 @@ document.addEventListener("click", async e => {
 });
 
 /* ---------------------------------------------------------------- settings */
-$("#upgradeBtn").addEventListener("click", () => $("#plansDialog").showModal());
-$("#settingsPlans").addEventListener("click", () => $("#plansDialog").showModal());
+$("#upgradeBtn").addEventListener("click", openPlans);
+$("#settingsPlans").addEventListener("click", openPlans);
 $("#editProfile").addEventListener("click", () => {
   if (!state.user) { openAuth(); return; }
   $("#profileNameInput").value = displayName();
