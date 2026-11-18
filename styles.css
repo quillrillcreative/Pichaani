@@ -184,4 +184,5 @@ dialog{max-height:calc(100dvh - 24px);overflow:auto;color:var(--charcoal)}
 .plan-list{margin:6px 0 0;padding-left:16px;color:#78827d;font-size:11px;line-height:1.6}
 .settings-progress{margin:10px 0 0;max-width:320px}
 .settings-since{margin:4px 0 0;font-size:10px;color:#9aa19b}
+.photo-card .img-fallback{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;justify-content:center;padding:10px;text-align:center;font-size:11px;line-height:1.4;color:#5f6a64;background:#eef2ec}
 
