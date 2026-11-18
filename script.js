@@ -87,7 +87,7 @@ async function sessionEnded() {
 }
 function resetUserState() {
   loadToken++;
-  state.user = null; state.profile = null; state.photos = []; state.albums = [];
+  state.user = null; state.profile = null; state.avatarUrl = null; state.photos = []; state.albums = [];
   state.selected.clear(); state.selecting = false; state.albumId = null; state.loading = false;
   signedUrlCache.clear();
   if (state.view === "album") state.view = "albums";
@@ -253,15 +253,43 @@ function planLabel() {
   const code = state.profile?.plan_code;
   return !code || /^free$/i.test(code) ? "Free plan" : `${String(code).charAt(0).toUpperCase()}${String(code).slice(1)} plan`;
 }
+const AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const AVATAR_MAX = 5 * 1024 * 1024;
+function renderAvatar(url, initial) {
+  for (const id of ["#profileAvatar", "#topAuthButton", "#settingsAvatar"]) {
+    const el = $(id);
+    el.replaceChildren();
+    if (url) {
+      const img = document.createElement("img");
+      img.src = url; img.alt = ""; img.className = "avatar-img";
+      img.addEventListener("error", () => { img.remove(); el.textContent = initial; });
+      el.append(img);
+    } else {
+      el.textContent = initial;
+    }
+  }
+}
+async function refreshAvatar() {
+  const path = state.profile?.avatar_path;
+  if (!state.user || !path) { state.avatarUrl = null; setSignedInUI(); return; }
+  try {
+    const { data, error } = await sb.storage.from("avatars").createSignedUrl(path, 3600);
+    if (error) throw error;
+    state.avatarUrl = data.signedUrl;
+  } catch (err) {
+    console.warn("Could not load profile photo", err);
+    state.avatarUrl = null;
+  }
+  setSignedInUI();
+}
 function setSignedInUI() {
   const name = displayName();
   const initial = state.user ? name.charAt(0).toUpperCase() : "?";
   $("#profileName").textContent = name;
-  $("#profileAvatar").textContent = initial;
-  $("#topAuthButton").textContent = initial;
+  renderAvatar(state.user ? state.avatarUrl : null, initial);
   $("#profilePlan").textContent = state.user ? planLabel() : "Sign in to sync";
   $("#authButton").textContent = state.user ? "Sign out" : "Sign in";
-  $("#settingsAvatar").textContent = initial;
+  $("#removePhoto").hidden = !(state.user && state.profile?.avatar_path);
   $("#settingsName").textContent = name;
   $("#settingsEmail").textContent = state.user ? (state.user.email || "") : "Sign in to view your account";
 }
@@ -321,6 +349,7 @@ async function loadLibrary(quiet = false) {
     state.albums = albums.data || [];
     state.usage = usage.data || null;
     if (!profile.error) state.profile = profile.data || null;
+    refreshAvatar();
     for (const id of [...state.selected]) if (!photoById(id)) state.selected.delete(id);
     if (state.albumId && !albumById(state.albumId)) { state.albumId = null; if (state.view === "album") state.view = "albums"; }
     state.loading = false;
@@ -984,6 +1013,48 @@ document.addEventListener("click", async e => {
 /* ---------------------------------------------------------------- settings */
 $("#upgradeBtn").addEventListener("click", openPlans);
 $("#settingsPlans").addEventListener("click", openPlans);
+$("#changePhoto").addEventListener("click", () => {
+  if (!state.user) { openAuth(); return; }
+  $("#avatarInput").click();
+});
+$("#avatarInput").addEventListener("change", async e => {
+  const file = e.target.files?.[0];
+  e.target.value = "";
+  if (!file || !state.user) return;
+  if (!AVATAR_TYPES.includes(file.type)) { toast("Use a JPEG, PNG or WebP image."); return; }
+  if (file.size > AVATAR_MAX) { toast("Profile photos must be 5 MB or smaller."); return; }
+  toast("Uploading your photo…");
+  const path = `${state.user.id}/avatar`;
+  try {
+    const up = await sb.storage.from("avatars").upload(path, file, { contentType: file.type, upsert: true });
+    if (up.error) throw up.error;
+    const upd = await sb.from("profiles").update({ avatar_path: path }).eq("id", state.user.id).select("*").maybeSingle();
+    if (upd.error) throw upd.error;
+    if (!upd.data) throw new Error("Your profile record is missing. Sign out and back in, then try again.");
+    state.profile = upd.data;
+    await refreshAvatar();
+    toast("Profile photo updated.");
+  } catch (err) {
+    if (isAuthError(err)) { await sessionEnded(); return; }
+    toast("Could not save your photo: " + (err.message || "try again"));
+  }
+});
+$("#removePhoto").addEventListener("click", async () => {
+  if (!state.user || !state.profile?.avatar_path) return;
+  if (!confirm("Remove your profile photo?")) return;
+  const path = state.profile.avatar_path;
+  try {
+    const upd = await sb.from("profiles").update({ avatar_path: null }).eq("id", state.user.id).select("*").maybeSingle();
+    if (upd.error) throw upd.error;
+    if (upd.data) state.profile = upd.data;
+    await sb.storage.from("avatars").remove([path]);
+    await refreshAvatar();
+    toast("Profile photo removed.");
+  } catch (err) {
+    if (isAuthError(err)) { await sessionEnded(); return; }
+    toast("Could not remove your photo: " + (err.message || "try again"));
+  }
+});
 $("#editProfile").addEventListener("click", () => {
   if (!state.user) { openAuth(); return; }
   $("#profileNameInput").value = displayName();

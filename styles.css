@@ -184,4 +184,8 @@ dialog{max-height:calc(100dvh - 24px);overflow:auto;color:var(--charcoal)}
 .plan-list{margin:6px 0 0;padding-left:16px;color:#78827d;font-size:11px;line-height:1.6}
 .settings-progress{margin:10px 0 0;max-width:320px}
 .settings-since{margin:4px 0 0;font-size:10px;color:#9aa19b}
+.avatar-img{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;object-fit:cover;display:block}
+.avatar{position:relative;overflow:hidden;flex:none}
+.small-avatar{overflow:hidden}
+.settings-avatar{overflow:hidden}
 
